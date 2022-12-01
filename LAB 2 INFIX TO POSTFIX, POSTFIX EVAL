@@ -1,0 +1,109 @@
+#include<stdio.h>
+#include<ctype.h>
+#define SIZE 50
+char stack[SIZE];
+int top=-1;
+push(char elem)
+{
+    stack[++top]=elem;
+}
+char pop()
+{
+    return(stack[top--]);
+}
+int pr(char symbol)
+{
+    if(symbol=='^')
+    {
+        return(3);
+    }
+    else if(symbol=='*'||symbol=='/')
+    {
+        return(2);
+    }
+    else if(symbol=='+'||symbol=='-')
+    {
+        return(1);
+    }
+    else
+    {
+        return(0);
+    }
+}
+ void main()
+ {
+     char infix[50],postfix[50],ch,elem;
+     int i=0,k=0;
+     printf("Enter Infix Expression:\n");
+     scanf("%s",infix);
+     push('#');
+     while((ch=infix[i++])!='\0')
+     {
+         if(ch=='(') push(ch);
+         else
+            if(isalnum(ch))postfix[k++]=ch;
+         else
+            if(ch==')')
+         {
+             while(stack[top]!='(')
+                postfix[k++]=pop();
+             elem=pop();
+         }
+         else
+         {
+             while(pr(stack[top])>=pr(ch))
+                postfix[k++]=pop();
+             push(ch);
+         }
+     }
+     while(stack[top]!='#')
+        postfix[k++]=pop();
+     postfix[k]='\0';
+     printf("\nPOSTFIX EXPRESSION=%s\n",postfix);
+ }
+ 
+ 
+ 2)
+ #include<stdio.h>
+#include<conio.h>
+#include<string.h>
+#include<math.h>
+int compute(char symbol,int op1,int op2)
+{
+  switch(symbol)
+  {
+    case'+':return op1+op2;
+    case'-':return op1-op2;
+    case'*':return op1*op2;
+    case'/':return op1/op2;
+    case'^':
+    case'$':return pow(op1,op2);
+   }
+}
+void main()
+{
+ int s[20],op1,op2,i,top,res;
+ char postfix[20],symbol;
+
+ printf("ENTER THE POSTFIX EXPRESSION\n");
+ scanf("%s",postfix);
+ top=-1;
+ for(i=0;i<strlen(postfix);i++)
+ {
+  symbol=postfix[i];
+  if(isdigit(symbol))
+  {
+   s[++top]=symbol-'0';
+  }
+  else
+  {
+   op2=s[top--];
+   op1=s[top--];
+   res=compute(symbol,op1,op2);
+   s[++top]=res;
+  }
+  }
+  res=s[top--];
+  printf("result=%d\n",res);
+  getch();
+}
